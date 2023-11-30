@@ -31,7 +31,6 @@ def find_two_nearest_points(x_values, x):
 
     min_r_dist = float('inf')
     min_l_dist = float('inf')
-
     l_val = r_val = 0
     l = r = 0
     for i, x_i in enumerate(x_values):
@@ -56,9 +55,16 @@ def linear_inperpolation(x_values, y_values, x):
     :return: Значение интерполянта в точке x.
     """
 
+    if len(x_values) == 0 or len(y_values) == 0:
+        return 0
+
+    for i,x_i in enumerate(x_values):
+        if  x_i == x:
+            return y_values[i]
+
     l, l_val, r, r_val = find_two_nearest_points(x_values, x)
         
-    result = y_values[l]*(x - l_val)/(l_val - r_val) + y_values[r]*(x - r_val)/(r_val - l_val)
+    result = y_values[l]*(x - r_val)/(l_val - r_val) + y_values[r]*(x - l_val)/(r_val - l_val)
 
     return result
 
@@ -71,16 +77,35 @@ def parabolic_interpolation(x_values, y_values, x):
     :param x: Точка, в которой производится интерполяция.
     :return: Значение интерполянта в точке x.
     """
+
+    if len(x_values) == 0 or len(y_values) == 0:
+        return 0
+
+    for i,x_i in enumerate(x_values):
+        if  x_i == x:
+            return y_values[i]
+    
+    l_count = 0
+    for i, x_i in enumerate(x_values):
+        if x > x_i:
+            l_count+=1
+    
+    r_count = 0
+    reversed_x = x_values[::-1]
+    for i, x_i in enumerate(reversed_x):
+        if x< x_i:
+            r_count+=1
+    
+    assert l_count >= 2 and r_count>=2, f"x = {x} не лежит во внутреннем отрезке между параболами. По этим данным нельзя осуществить параболическую интерполяцию"
+
     l_1, l_val_1, r_1, r_val_1 = find_two_nearest_points(x_values, x) #i, i+1
-
     l_2, l_val_2, _, _ = find_two_nearest_points(x_values, l_val_1) #i-1 
-
     _, _, r_2, r_val_2 = find_two_nearest_points(x_values, r_val_1) #i+2
 
     p1 = (x - l_val_1)*(x - r_val_1)/((l_val_2 - l_val_1)*(l_val_2 - r_val_1)) #i-1 (l_val_2)
     p2 = (x - l_val_2)*(x - r_val_1)/((l_val_1 - l_val_2)*(l_val_1 - r_val_1)) #i (l_val_1)
-    p3 = (x - l_val_1)*(x - r_val_2)/((r_val_1 - l_val_1)*(r_val_1 - r_val_2)) #i+1 (r_val_1)
-    p4 = (x - l_val_2)*(x - r_val_1)/((r_val_2 - l_val_2)*(r_val_2 - r_val_1)) #i+2 (r_val_2)
+    p3 = (x - l_val_1)*(x - l_val_2)/((r_val_1 - l_val_1)*(r_val_1 - l_val_2)) #i+1 (r_val_1)
+    p4 = (x - l_val_1)*(x - r_val_1)/((r_val_2 - l_val_1)*(r_val_2 - r_val_1)) #i+2 (r_val_2)
 
     l1 = p1*y_values[l_2] + p2*y_values[l_1] + p3*y_values[r_1]
     l2 = p2*y_values[l_1] + p2*y_values[r_1] + p4*y_values[r_2]

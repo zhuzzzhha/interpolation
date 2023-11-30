@@ -1,6 +1,8 @@
 import unittest
 
-from interpolation import global_interpolation
+import sys
+sys.path.insert(0, 'interpolation')
+from module import global_interpolation
 
 class TestGlobalInterpolation(unittest.TestCase):
 
