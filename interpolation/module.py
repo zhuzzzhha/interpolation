@@ -7,6 +7,9 @@ def global_interpolation(x_values, y_values, x):
     :param x: Точка, в которой производится интерполяция.
     :return: Значение интерполянта в точке x.
     """
+    if len(x_values) != len(y_values):
+        raise ValueError("Длины x_values и y_values должны совпадать.")
+
     result = 0.0
     n = len(x_values)
 
@@ -54,7 +57,10 @@ def linear_inperpolation(x_values, y_values, x):
     :param x: Точка, в которой производится интерполяция.
     :return: Значение интерполянта в точке x.
     """
-
+    
+    if len(x_values) != len(y_values):
+        raise ValueError("Длины x_values и y_values должны совпадать.")
+        
     if len(x_values) == 0 or len(y_values) == 0:
         return 0
 
@@ -77,6 +83,9 @@ def parabolic_interpolation(x_values, y_values, x):
     :param x: Точка, в которой производится интерполяция.
     :return: Значение интерполянта в точке x.
     """
+    
+    if len(x_values) != len(y_values):
+        raise ValueError("Длины x_values и y_values должны совпадать.")
 
     if len(x_values) == 0 or len(y_values) == 0:
         return 0
